@@ -1,6 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useCallback, useEffect, useState } from "react";
-import { View, Text, SafeAreaView, TextInput, TouchableOpacity } from "react-native";
+import { View, Text, SafeAreaView, TextInput, TouchableOpacity, ScrollView, KeyboardAvoidingView  } from "react-native";
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import * as DocumentPicker from 'expo-document-picker';
 
 import UploadImage from "../components/UploadImage";
@@ -8,6 +9,7 @@ import UploadImage from "../components/UploadImage";
 const Profile = ({ navigation }) => {
 
   const [accountType, setAccountType] = useState("");
+  const [CVname, setCVname] = useState("");
 
   useEffect(() => {
     getAccountType();
@@ -23,44 +25,56 @@ const Profile = ({ navigation }) => {
     }
   }
 
+  
   const selectDocument = async () => {
     try {
-      const doc = await DocumentPicker.pick()
-      console.log(doc)
+      const file = await DocumentPicker.getDocumentAsync({
+        type: 'application/pdf',
+      });
+  
+      if (file.type === 'success') {
+        setCVname(file.uri)
+      }
     } catch (error) {
-      console.log("There was an error uploading the document", error)
+      console.log(error);
     }
-  }
+  };
 
+  
   return (
-    <SafeAreaView className="bg-gray-50 h-[100vh] py-10">
+    <KeyboardAvoidingView
+                behavior={Platform.OS === "ios" ? "padding" : null}
+                style={{ flex: 1 }}
+            >
+    <SafeAreaView className="bg-gray-50 h-[100vh] py-10 flex-1">
+      
       {
         (accountType === "JobSeeker") ? (
-          <View className="">
+          <ScrollView>
             <View className="w-[100vw] flex flex-col justify-center items-center">
               <UploadImage />
             </View>
 
             <View className="px-11">
-              <View className="w-[80%] mb-5">
-                <Text className="mb-1">Name</Text>
+              <View className="relative w-[80%] mb-5">
+                <Text className="absolute mb-1">Name</Text>
                 <TextInput 
-                  className="w-full rounded-lg py-1 px-4 border-2 border-gray-300"
+                  className="absolute w-full rounded-md py-2 px-4 border-2 border-gray-300 focus:border-orange-400 transition-all duration-200 ease-in-out"
                 />
               </View>
 
-              <View className="w-[12%] mb-5">
+              <View className="w-[15%] mb-5">
                 <Text className="mb-1">Age</Text>
                 <TextInput 
                   keyboardType='numeric'
-                  className="w-full rounded-lg py-1 px-4 border-2 border-gray-300"
+                  className="w-full rounded-md py-2 px-4 border-2 border-gray-300 focus:border-orange-400 transition-all duration-200 ease-in-out"
                 />
               </View>
 
               <View className="w-[80%] mb-5">
                 <Text className="mb-1">Email</Text>
                 <TextInput 
-                  className="w-full rounded-lg py-1 px-4 border-2 border-gray-300"
+                  className="w-full rounded-md py-2 px-4 border-2 border-gray-300 focus:border-orange-400 transition-all duration-200 ease-in-out"
                 />
               </View>
 
@@ -68,16 +82,35 @@ const Profile = ({ navigation }) => {
                 <Text className="mb-1">Telephone</Text>
                 <TextInput 
                   keyboardType='numeric'
-                  className="w-full rounded-lg py-1 px-4 border-2 border-gray-300"
+                  className="w-full rounded-md py-2 px-4 border-2 border-gray-300 focus:border-orange-400 transition-all duration-200 ease-in-out"
+                />
+              </View>
+
+              <View className="w-[80%] mb-5">
+                <Text className="mb-1">Main Title</Text>
+                <TextInput 
+                  className="w-full rounded-md py-2 px-4 border-2 border-gray-300 focus:border-orange-400 transition-all duration-200 ease-in-out"
+                />
+              </View>
+
+              <View className="w-[80%] mb-5">
+                <Text className="mb-1">Introduction</Text>
+                <TextInput 
+                  multiline={true}
+                  numberOfLines={4}
+                  className="w-full rounded-md py-2 px-4 border-2 border-gray-300 focus:border-orange-400 transition-all duration-200 ease-in-out"
                 />
               </View>
 
               <View className="w-[80%] mb-5">
                 <Text className="mb-1">CV</Text>
-                <TouchableOpacity onPress={() => {selectDocument()}}><Text>Upload 📑</Text></TouchableOpacity>
+                <View className="flex flex-row">
+                  <TouchableOpacity onPress={() => {selectDocument()}} className="bg-orange-400 flex justify-center items-center rounded-lg p-3 mr-2"><Text className="text-white">Upload 📑</Text></TouchableOpacity>
+                  <Text>{CVname.split("DocumentPicker/").slice(1).join("DocumentPicker/")}</Text>
+                </View>
               </View>
             </View>
-          </View>
+          </ScrollView>
         ) : (accountType === "Client") ? (
           <Text className=" text-red-500">Welcome Client</Text>
         ) : (
@@ -93,6 +126,7 @@ const Profile = ({ navigation }) => {
         )
       }
     </SafeAreaView>
+    </KeyboardAvoidingView>
   )
 }
 
