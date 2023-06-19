@@ -1,20 +1,85 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { Text, SafeAreaView, View } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export default function App() {
+import OnBoarding from './screens/OnBoarding.js';
+import Home from "./screens/Home.js"
+import Profile from './screens/Profile.js';
+
+import LeftScreenHeaderBtn from './components/LeftScreenHeaderBtn.js';
+import RightScreenHeaderBtn from './components/RightScreenHeaderBtn.js';
+
+import {icons, images} from "./constants"
+import { useEffect, useState } from 'react';
+
+const Stack = createNativeStackNavigator();
+
+getData = async (key) => {
+  try {
+    const value = await AsyncStorage.getItem(key)
+    return value
+  } catch(e) {
+    // error reading value
+  }
+}
+
+const App = () => {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContainer>
+      <Stack.Navigator>
+      <Stack.Screen 
+          name="OnBoarding"
+          component={OnBoarding}
+          options={{
+            headerTitle: ""
+          }}
+        />
+
+        <Stack.Screen 
+          name="Profile"
+          component={Profile}
+          options={{
+            headerTitle: ""
+          }}
+        />
+        
+        <Stack.Screen
+              name="Home"
+              component={Home}
+              options={{
+                headerShadowVisible: false,
+                headerLeft: () => (
+                  <LeftScreenHeaderBtn iconurl={icons.menu}/>
+                ),
+                headerRight: () => (
+                  <RightScreenHeaderBtn iconurl={images.guest} />
+                ),
+                headerTitle: ""
+              }}
+          />
+
+        
+        {/* <Stack.Screen
+            name="Home"
+            component={Home}
+            options={{
+              headerShadowVisible: false,
+              headerLeft: () => (
+                <LeftScreenHeaderBtn iconurl={icons.menu}/>
+              ),
+              headerRight: () => (
+                <RightScreenHeaderBtn iconurl={images.guest} />
+              ),
+              headerTitle: ""
+            }}
+        />
+          */}
+      </Stack.Navigator>
+    </NavigationContainer>
+    
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default App;
