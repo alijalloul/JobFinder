@@ -33,7 +33,8 @@ const App = () => {
           name="OnBoarding"
           component={OnBoarding}
           options={{
-            headerTitle: ""
+            headerTitle: "",
+            headerShadowVisible: false,
           }}
         />
 
