@@ -20,7 +20,7 @@ export default function UploadImage() {
   };
 
     return (
-            <View className=" w-48 h-48 bg-[#efefef] relative rounded-full overflow-hidden">
+            <View className=" w-48 aspect-square bg-[#efefef] relative rounded-full overflow-hidden">
                 {
                     image  && <Image source={{ uri: image }} className=" w-full h-full" />
                 }

@@ -3,6 +3,8 @@ import { Text, SafeAreaView, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import 'react-native-reanimated';
+import 'react-native-gesture-handler';
 
 import OnBoarding from './screens/OnBoarding.js';
 import Home from "./screens/Home.js"
@@ -27,56 +29,36 @@ getData = async (key) => {
 
 const App = () => {
   return (
-    <NavigationContainer>
+    <NavigationContainer className=" border-box padding-0 margin-0">
       <Stack.Navigator>
-      <Stack.Screen 
-          name="OnBoarding"
-          component={OnBoarding}
-          options={{
-            headerTitle: "",
-            headerShadowVisible: false,
-          }}
-        />
-
         <Stack.Screen 
-          name="Profile"
-          component={Profile}
-          options={{
-            headerTitle: ""
-          }}
-        />
-        
-        <Stack.Screen
+            name="OnBoarding"
+            component={OnBoarding}
+            options={{
+              headerTitle: "",
+              headerShadowVisible: false,
+            }}
+          />
+
+          <Stack.Screen 
+            name="Profile"
+            component={Profile}
+            options={{
+              headerTitle: ""
+            }}
+          />
+          
+          <Stack.Screen
               name="Home"
               component={Home}
               options={{
                 headerShadowVisible: false,
-                headerLeft: () => (
-                  <LeftScreenHeaderBtn iconurl={icons.menu}/>
-                ),
                 headerRight: () => (
                   <RightScreenHeaderBtn iconurl={images.guest} />
                 ),
                 headerTitle: ""
               }}
           />
-
-        
-        {/* <Stack.Screen
-            name="Home"
-            component={Home}
-            options={{
-              headerShadowVisible: false,
-              headerLeft: () => (
-                <LeftScreenHeaderBtn iconurl={icons.menu}/>
-              ),
-              headerRight: () => (
-                <RightScreenHeaderBtn iconurl={images.guest} />
-              ),
-              headerTitle: ""
-            }}
-        />
-          */}
       </Stack.Navigator>
     </NavigationContainer>
     
